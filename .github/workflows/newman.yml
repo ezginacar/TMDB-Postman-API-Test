@@ -1,0 +1,44 @@
+name: Run Newman Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-newman-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Install Newman
+      run: npm install -g newman newman-reporter-html
+
+    - name: Run Newman Tests
+      run: |
+        newman run TMDB_Collection.json -e TMDB_Environment.json \
+          --reporters cli,html,json \
+          --reporter-json-export newman-output.json \
+          --reporter-html-export newman-report.html
+
+    - name: Upload JSON Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: newman-json-report
+        path: newman-output.json
+
+    - name: Upload HTML Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: newman-html-report
+        path: newman-report.html
