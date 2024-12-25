@@ -1,0 +1,624 @@
+{
+	"info": {
+		"_postman_id": "a71c5f5b-93d4-42ed-8dd6-1a2914d06346",
+		"name": "TMDB",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4350435"
+	},
+	"item": [
+		{
+			"name": "Movie List",
+			"item": [
+				{
+					"name": "Valid Popular Movie Listing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"   \r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains results\", function () {\r",
+									"    pm.expect(jsonData.results).to.be.an('array').that.is.not.empty;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// başarılı resp. parametrelerinin hepsi belirlenen içerikte resp. yer alıyor mu? \r",
+									"\r",
+									"const expectedParams = {\r",
+									"        \"adult\" : \"boolean\",\r",
+									"        \"backdrop_path\" : \"string\",\r",
+									"        \"genre_ids\": \"integerArray\",\r",
+									"        \"id\" : \"integer\",\r",
+									"        \"original_language\": \"string\",\r",
+									"        \"original_title\" : \"string\",\r",
+									"        \"overview\" : \"string\",\r",
+									"        \"popularity\" : \"number\",\r",
+									"        \"poster_path\" : \"string\",\r",
+									"        \"release_date\" : \"string\",\r",
+									"        \"title\" : \"string\",\r",
+									"        \"video\" : \"boolean\",\r",
+									"        \"vote_average\" : \"number\",\r",
+									"        \"vote_count\" : \"integer\"\r",
+									"\r",
+									"\r",
+									"}\r",
+									"\r",
+									"let missingParams = [];\r",
+									"let mismatchParams = [];\r",
+									"/*\r",
+									"Object.keys(expectedParams).forEach(param => {\r",
+									"    //resultta eksik parametreleri bulup toplamak için\r",
+									"    if(jsonData.hasOwnProperty(param)) {\r",
+									"        missingParams.push(param);\r",
+									"    }\r",
+									"    //parametre eksik olmadığı durumda verip tipi doğrulaması için\r",
+									"    else {\r",
+									"        let expectedType = expectedParams[param];\r",
+									"        let actualValue = jsonData[param];\r",
+									"\r",
+									"        console.log (\"BBB -> \", param);\r",
+									"        console.log (\"AAAAAA -> \", jsonData[\"vote_count\"]);\r",
+									"\r",
+									"        //intArray dışındaki parametre tipleri için kontrol\r",
+									"        if(typeof actualValue !== expectedType){\r",
+									"            mismatchParams.push({\r",
+									"                param,\r",
+									"                expectedType,\r",
+									"                actualType: typeof actualValue\r",
+									"            });\r",
+									"        }\r",
+									"        //intArray kontrol\r",
+									"        else if(expectedType === \"integerArray\") {\r",
+									"            if (!Array.isArray(actualValue) || !actualValue.every(item => Number.isInteger(item))) {\r",
+									"                mismatchParams.push({\r",
+									"                    param,\r",
+									"                    expectedType: \"integerArray\",\r",
+									"                    actualType: Array.isArray(actualValue) ? \"array (but not all integers)\" : typeof actualValue\r",
+									"                });\r",
+									"            }\r",
+									"        } \r",
+									"\r",
+									"\r",
+									"    }\r",
+									"})\r",
+									"*/\r",
+									"\r",
+									"jsonData.results.forEach(movie => {\r",
+									"    Object.keys(expectedParams).forEach(param => {\r",
+									"    //resultta eksik parametreleri bulup toplamak için\r",
+									"    if(jsonData.hasOwnProperty(param)) {\r",
+									"        missingParams.push(param);\r",
+									"    }\r",
+									"    //parametre eksik olmadığı durumda verip tipi doğrulaması için\r",
+									"    else {\r",
+									"        let expectedType = expectedParams[param];\r",
+									"        let actualValue = movie[param];\r",
+									"\r",
+									"    \r",
+									"        //intArray dışındaki parametre tipleri için kontrol\r",
+									"        if(typeof actualValue !== expectedType){\r",
+									"            mismatchParams.push({\r",
+									"                param,\r",
+									"                expectedType,\r",
+									"                actualType: typeof actualValue\r",
+									"            });\r",
+									"        }\r",
+									"        //intArray kontrol\r",
+									"        else if(expectedType === \"integerArray\") {\r",
+									"            if (!Array.isArray(actualValue) || !actualValue.every(item => Number.isInteger(item))) {\r",
+									"                mismatchParams.push({\r",
+									"                    param,\r",
+									"                    expectedType: \"integerArray\",\r",
+									"                    actualType: Array.isArray(actualValue) ? \"array (but not all integers)\" : typeof actualValue\r",
+									"                });\r",
+									"            }\r",
+									"        } \r",
+									"    \r",
+									"\r",
+									"\r",
+									"    }\r",
+									"})\r",
+									"\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"All params should seen \", function () {\r",
+									"    pm.expect(missingParams).to.eql([]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Types of all params should matched with the api document \", function () {\r",
+									"    pm.expect(mismatchParams).to.eql([]);\r",
+									"});\r",
+									"\r",
+									"// Detaylı hata mesajları\r",
+									"if (missingParams.length > 0) {\r",
+									"    console.log(\"Missing params :\" ,missingParams);\r",
+									"}\r",
+									"\r",
+									"if (mismatchParams.length > 0) {\r",
+									"    console.log(\"missmatch  params  : \", mismatchParams)\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_key}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/movie/popular",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"movie",
+								"popular"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InValid Popular Movie Listing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									" let movieId = pm.variables.get(\"InvalidMoviePage\"); \r",
+									"\r",
+									"pm.test(\"Status code is correct\", function () {\r",
+									"    pm.response.to.have.status(400); \r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(`Error message is correct for page ${movieId}`, function () {\r",
+									"    pm.expect(response.status_message).is.to.equal(\"Invalid page: Pages start at 1 and max at 500. They are expected to be an integer.\")\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_key}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/movie/popular?page={{InvalidMoviePage}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"movie",
+								"popular"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "{{InvalidMoviePage}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{api_key}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "API Validation",
+			"item": [
+				{
+					"name": "Valid API Key Validation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validate authentication control\", function () {\r",
+									"    const statusCode = pm.response.code;\r",
+									"\r",
+									"    if (statusCode === 200 ) {\r",
+									"        console.log(\"API Key validated successfully..\");\r",
+									"            } else if (statusCode === 404) {\r",
+									"                    console.log(\"Request failed with status 404: Not\" );\r",
+									"    } else if (statusCode === 404) {\r",
+									"        console.log(\"Request failed with status 404: Not Found\");\r",
+									"    } else {\r",
+									"        console.log(\"Unexpected status code:\", statusCode);\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_key}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/movie/popular",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"movie",
+								"popular"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid API Key Validation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"let currentApiKey= pm.variables.get(\"InvalidApiKey\"); \r",
+									"\r",
+									"pm.test(\"Status code is correct\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(`Error message is correct for invalid API Key  ${currentApiKey}`, function () {\r",
+									"    pm.expect(response.status_message).is.to.equal(\"Invalid API key: You must be granted a valid key.\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{invalidValue}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/movie/popular",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"movie",
+								"popular"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Movie",
+			"item": [
+				{
+					"name": "Get Single Movie From ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const movie = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// title\r",
+									"pm.test(\"Movie title should be verified\", () => {\r",
+									"    pm.expect(movie.title).to.eql(\"Absolution\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Movie title is not empty and a string\", () =>{\r",
+									"    pm.expect(movie.title).to.be.a(\"string\").that.is.not.empty;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// genres\r",
+									"pm.test(\"Genre is not empty and an array \", () => {\r",
+									"    pm.expect(movie.genres).to.be.a(\"array\").that.is.not.empty;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Each genre should has id & name. Id should be defined as integer and Name should be defined as string\", () => {\r",
+									"    movie.genres.forEach(genre => {\r",
+									"        pm.expect(genre).to.have.property(\"id\");\r",
+									"        pm.expect(Number.isInteger(genre.id)).to.be.true;\r",
+									"        \r",
+									"        pm.expect(genre).to.have.property(\"name\");\r",
+									"        pm.expect(genre.name).to.be.a(\"string\").that.is.not.empty;\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"// release date\r",
+									"pm.test(\"Movie release date format is YYYY-MM-DD\", () => {\r",
+									"    pm.expect(movie.release_date).to.match(/^\\d{4}-\\d{2}-\\d{2}$/); // YYYY-MM-DD formatı\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_key}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{baseUrl}}/movie/974453?language=en-US",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"movie",
+								"974453"
+							],
+							"query": [
+								{
+									"key": "language",
+									"value": "en-US"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
