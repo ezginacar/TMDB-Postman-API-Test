@@ -26,7 +26,7 @@ jobs:
 
     - name: Run Newman Tests
       run: |
-        newman run TMDB_Collection.json -e .github/workflows/TMDB_ENV_VARIABLES.postman_environment.json \
+        newman run TMDB.postman_collection.json -e .github/workflows/TMDB_ENV_VARIABLES.postman_environment.json \
           --reporters cli,html,json \
           --reporter-json-export newman-output.json \
           --reporter-html-export newman-report.html
